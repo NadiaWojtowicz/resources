@@ -10,8 +10,9 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+
 # Setting my root directory to where I have my /data folder etc. (easier for me, but personalise to your own way of working)
-knitr::opts_knit$set(root.dir = "/Users/pernillebrams/Desktop/AARHUS_UNIVERSITY/instructor_2024/methods-2")
+knitr::opts_knit$set(root.dir = "/Users/Nadia/Desktop/resources/data")
 
 ```
 
@@ -64,13 +65,17 @@ Create a function that accepts a temperature in Fahrenheit and returns the tempe
 ```{r}
 # Function to convert Fahrenheit to Celsius
 convert_to_celsius <- function(fahrenheit) {
+  temp_celsius <- (fahrenheit - 32) * 5 / 9
+  return(temp_celsius)
+}
   # Your code here
   # Hint: Apply the conversion formula within the function
-}
+
+
 
 # Example of how the final function (when you've written it) should be used:
-# temp_celsius <- convert_to_celsius(68)
-# print(temp_celsius)
+ temp_celsius <- convert_to_celsius(68)
+print(temp_celsius)
 # Expected Output (for fahrenheit = 68): 20
 ```
 
@@ -87,13 +92,19 @@ Use statements if, else if, and else. Google how to set up the syntax with curly
 ```{r}
 # Function to give clothing advice based on temperature
 clothing_advice <- function(temperature) {
-  # Your code here
-  # Hint: Use if-else statements to check the temperature and return the advice
+  if(temperature<15){
+    advice <- "wear a warm coat"
+  }else if (temperature >= 15 && temperature <= 25) {
+    advice <- "wear a light jacket"
+  }else 
+    {advice <-  "wear a t-shirt"
+    }
+  return(advice)
 }
 
 # Example of how the final function (when you've written it) should be used:
-# advice <- clothing_advice(20)
-# print(advice)
+advice <- clothing_advice(20)
+print(advice)
 # Expected Output (for temperature = 20): "Wear a light jacket."
 
 ```
@@ -101,6 +112,44 @@ clothing_advice <- function(temperature) {
 ## Exercises from the book
 
 ## Ex. 0: Write up / copy the code found on page 69-70 in chapter 5 ROS and note whats going on at each step. The book explains it - so just go through it and discuss with your group to understand whats going on.
+```{r}
+#simulating 400 births based on provided data
+n_girls <- rbinom(1, 400, 0.488)
+print(n_girls)
+
+#simulate the process 1000 times so we get a better view about the distribution
+n_sims <- 1000
+n_girls <- rep(NA, n_sims)
+for (s in 1:n_sims){
+n_girls[s] <- rbinom(1, 400, 0.488)
+}
+hist(n_girls)
+
+n_girls <- rbinom(n_sims, 400, 0.488)
+
+birth_type <- sample(c("fraternal twin","identical twin","single birth"),
+size=400, replace=TRUE, prob=c(1/125, 1/300, 1 - 1/125 - 1/300))
+girls <- rep(NA, 400)
+for (i in 1:400){
+if (birth_type[i]=="single birth") {
+girls[i] <- rbinom(1, 1, 0.488)
+} else if (birth_type[i]=="identical twin") {
+girls[i] <- 2*rbinom(1, 1, 0.495)
+} else if (birth_type[i]=="fraternal twin") {
+girls[i] <- rbinom(1, 2, 0.495)
+}
+}
+n_girls <- sum(girls)
+
+
+girls <- ifelse(birth_type=="single birth", rbinom(400, 1, 0.488),
+ifelse(birth_type=="identical twin", 2*rbinom(400, 1, 0.495),
+rbinom(400, 2, 0.495)))
+
+
+
+```
+
 
 ### Ex. 5.1 Discrete probability simulation: Suppose that a basketball player has a 60% chance of making a shot, and he keeps taking shots until he misses two in a row. Also assume his shots are independent (so that each shot has 60% probability of success, no matter what happened before).
 * Hint 3 and 4
